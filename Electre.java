@@ -6,6 +6,14 @@
 //package com.raven.electre;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
 /**
  *
  * @author ryota
@@ -191,9 +199,30 @@ public class Electre {
         }
         return result;
     }
+
+
+    public static void writeIntoCSV(double[][] table, String fileName) throws FileNotFoundException {
+        File csvFile = new File(fileName+".csv");
+        PrintWriter out = new PrintWriter(csvFile);
+
+        for(double[] row: table){
+            int repVal = 0;
+            for(double val : row){
+                if(repVal == 0)
+                    out.printf("%f",val);
+                else 
+                    out.printf(",%f",val);
+                ++repVal;
+            }
+            out.printf("%n");
+        }
+
+        out.close();
+
+    }
     
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException{
 
         Electre electre = new Electre();
         //convert
@@ -203,9 +232,11 @@ public class Electre {
         double cordance[][];
         cordance = electre.getConcordanceMatrix(0, 1);
         electre.printTable(cordance);
+        writeIntoCSV(cordance,"cordance");
 
         System.out.println("************************");
         cordance = electre.getDiscordanceMatricx(0, 1);
+        writeIntoCSV(cordance,"discordance");
         electre.printTable(cordance);
 
 
