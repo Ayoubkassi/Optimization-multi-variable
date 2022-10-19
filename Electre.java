@@ -230,16 +230,32 @@ public class Electre {
         //print
         //electre.printTable();
         double cordance[][];
-        cordance = electre.getConcordanceMatrix(0, 1);
+        /*cordance = electre.getConcordanceMatrix(0, 1);
         electre.printTable(cordance);
         writeIntoCSV(cordance,"cordance");
 
         System.out.println("************************");
         cordance = electre.getDiscordanceMatricx(0, 1);
         writeIntoCSV(cordance,"discordance");
-        electre.printTable(cordance);
+        electre.printTable(cordance);*/
 
+        //loop over all tries
 
+        double table[][];
+
+        for(int i=0;i<7;i++){
+            for(int j=0;j<7;j++){
+                if( i != j){
+                    table = electre.getConcordanceMatrix(i,j);
+                    String name ="concordance : " + Integer.toString(i) + " --> " + Integer.toString(j);
+                    writeIntoCSV(table,name);
+                    table = electre.getDiscordanceMatricx(i,j);
+                    name ="discondance : " + Integer.toString(i) + " --> " + Integer.toString(j);
+                    writeIntoCSV(table,name);
+
+                }
+            }
+        }
 
     }
     
