@@ -328,11 +328,11 @@ public class Electre {
         int loopIndex = 0;
 
         //start a loop
-        while( allIndexes.size() != SIZE -1 ){
+        while( allIndexes.size() <= SIZE -1 ){
 
 
 
-
+            System.out.println("heeere");
             //determine lamda Max
             double lamdaMax = 0;
             double[][] m3 = this.getCredibilityMatrix().get(2);
@@ -343,12 +343,22 @@ public class Electre {
                     m3[val][i] = Double.NaN;
                 }   
             }
+
+            //print matrix test
+            for(double[] row : m3){
+                for(double val : row){
+                    System.out.print(val+"      ");
+                }
+                System.out.println();
+            }
+
             for(double[] row : m3){
                 for(double val : row){
                     if( val > lamdaMax && val != Double.NaN)
                         lamdaMax = val;
                 }
             }
+
             //determine s(lamdaMax) 
             double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
 
@@ -407,20 +417,25 @@ public class Electre {
                 }
             }
 
+
             sameOrder.add(bigIndex);
             allIndexes.add(bigIndex);
 
             //check for other values exist with same rank
             for(int i=0 ; i< SIZE -1 ; i++){
-                if(additionalInfo[i][2] == maxOver && (i != bigIndex))
-                    sameOrder.add(i);
-                    allIndexes.add(i);
+                if(additionalInfo[i][2] == maxOver && (i != bigIndex)){
+                        
+                        sameOrder.add(i);
+                        allIndexes.add(i);
+                }
             }
+
+            
 
             //here when we will see difference between asecnd and descend
 
 
-
+            //System.out.println(allIndexes.size());
             order.put(loopIndex++, sameOrder);
         }
 
@@ -475,6 +490,9 @@ public class Electre {
         //System.out.println(electre.getSize());
         int SIZE = electre.getSize();
         int SIZE_CRITERES = electre.getSizeCritere();
+
+        Map <Integer , List<Integer>> res = electre.getOrder();
+        System.out.println(res);
 
 
         //Test credibility
