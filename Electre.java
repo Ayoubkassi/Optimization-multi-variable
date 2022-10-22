@@ -62,6 +62,7 @@ public class Electre {
     public final double SEUIL_VETO[]         = new double[]{101,140,7,7,1100,3,5,5,5,3,1,70,7,20,3000,5,4,4,5,7,70,101,101,101,101,101,101,101,101,101};
     public final int NATURE_SEUIL[]          = new int[]{2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
     public final static double WEIGHTS[]     = new double[]{2.2,6.7,24.4,17.8,22.2,26.7};
+    public final static double ALL_WEIGHTS[] = new double[]{31.25,31.25,12.5,4.2,20.8,-1,4.2,12.5,62.5};
     public final int SIZE_CRITERES           = alternatives.length;
 
     public int getSize(){
@@ -219,6 +220,14 @@ public class Electre {
         return sum;
     }
 
+    public double calcSumWeightCorcordance(int i , int j){
+        double concordance[][] = this.getConcordanceMatrix(i,j);
+        double sum = 0;
+
+        return sum;
+        
+    }
+
     //calcul credibility Matrix
     public ArrayList<double[][]> getCredibilityMatrix(){
         ArrayList<double[][]> allTable = new ArrayList<double[][]>();
@@ -229,7 +238,7 @@ public class Electre {
                 if( i == j)
                     continue;
                 else{
-                    m1[i][j] = 1;
+                    m1[i][j] = 1 ;
                 }
             }
         }
@@ -300,8 +309,8 @@ public class Electre {
         int SIZE_CRITERES = electre.getSizeCritere();
 
         //generate all excel files
-        for(int i=0;i<7;i++){
-            for(int j=0;j<7;j++){
+        for(int i=1;i<=7;i++){
+            for(int j=1;j<=7;j++){
                 if( i != j){
                     table = electre.getConcordanceMatrix(i,j);
                     String name ="concordance : " + Integer.toString(i) + " --> " + Integer.toString(j);
