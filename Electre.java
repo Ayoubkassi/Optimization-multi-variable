@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 /**
  *
  * @author ryota
@@ -317,10 +319,111 @@ public class Electre {
 
     //writing distillation algorithm
 
-    public int[] getOrder(){
-        int[] order = new int[SIZE-1];
+    public Map<Integer, List<Integer>> getOrder(){
+        Map<Integer , List<Integer>> order = new HashMap<Integer, List<Integer>>();
+        int[][] additionalInfo = new int[SIZE -1][3];
 
-        
+
+        List<Integer> allIndexes = new ArrayList<Integer>();
+        int loopIndex = 0;
+
+        //start a loop
+        while( allIndexes.size() != SIZE -1 ){
+
+
+
+
+            //determine lamda Max
+            double lamdaMax = 0;
+            double[][] m3 = this.getCredibilityMatrix().get(2);
+            //update values as null
+            for(int val : allIndexes){
+                for(int i=0 ; i< SIZE -1 ; i++){
+                    m3[i][val] = Double.NaN;
+                    m3[val][i] = Double.NaN;
+                }   
+            }
+            for(double[] row : m3){
+                for(double val : row){
+                    if( val > lamdaMax && val != Double.NaN)
+                        lamdaMax = val;
+                }
+            }
+            //determine s(lamdaMax) 
+            double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
+
+            //find lamda
+            double lamda = 0;
+            for(double[] row : m3){
+                for(double val : row){
+                    if((val != Double.NaN && val > lamda) && val < (lamdaMax - SLamdaMax ) )
+                        lamda = val;
+                }
+            }
+
+            //update the existing m3
+            for(int i=0 ; i< SIZE -1 ; i++){
+                for(int j=0 ; j<SIZE -1 ; j++){
+                    if(m3[i][j] > lamda)
+                        m3[i][j] = 1;
+                    else if(m3[i][j] != Double.NaN) 
+                        m3[i][j] = 0;
+                }
+            }
+
+            //add additionalInfo : os et od et q 
+            int currentSum ;
+            for(int i = 0; i< SIZE -1 ; i++){
+                currentSum = 0;
+                for(int j=0 ; j< SIZE -1 ; j++){
+                    if(i != j && m3[i][j] != Double.NaN)
+                        currentSum+=m3[i][j];
+                    else 
+                        continue;
+                }
+                additionalInfo[i][0] = currentSum;
+            }
+
+            for(int i = 0; i< SIZE -1 ; i++){
+                currentSum = 0;
+                for(int j=0 ; j< SIZE -1 ; j++){
+                    if(i != j && m3[i][j] != Double.NaN)
+                        currentSum+=m3[j][i];
+                    else 
+                        continue;
+                }
+                additionalInfo[i][1] = currentSum;
+            }
+
+            //get the max 
+            List<Integer> sameOrder = new ArrayList<Integer>();
+            int maxOver = -10000;
+            int bigIndex = 0;
+            for(int i=0 ; i < SIZE -1 ; i++){
+                additionalInfo[i][2] = additionalInfo[i][0] - additionalInfo[i][1];
+                if(additionalInfo[i][2] > maxOver){
+                    maxOver = additionalInfo[i][2];
+                    bigIndex = i;
+                }
+            }
+
+            sameOrder.add(bigIndex);
+            allIndexes.add(bigIndex);
+
+            //check for other values exist with same rank
+            for(int i=0 ; i< SIZE -1 ; i++){
+                if(additionalInfo[i][2] == maxOver && (i != bigIndex))
+                    sameOrder.add(i);
+                    allIndexes.add(i);
+            }
+
+            //here when we will see difference between asecnd and descend
+
+
+
+            order.put(loopIndex++, sameOrder);
+        }
+
         return order;
 
     }
