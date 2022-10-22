@@ -62,7 +62,7 @@ public class Electre {
     public final double SEUIL_VETO[]         = new double[]{101,140,7,7,1100,3,5,5,5,3,1,70,7,20,3000,5,4,4,5,7,70,101,101,101,101,101,101,101,101,101};
     public final int NATURE_SEUIL[]          = new int[]{2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
     public final static double WEIGHTS[]     = new double[]{2.2,6.7,24.4,17.8,22.2,26.7};
-    public final static double ALL_WEIGHTS[] = new double[]{31.25,31.25,12.5,4.2,20.8,-1,4.2,12.5,62.5};
+    public final static double ALL_WEIGHTS[] = new double[]{7.5,7.5,3,1,5,7.5,1,3,7.5,5,7,1,3,7,5,1,1,5,7,3,1,6.5,13,2.5,11,2.5,9,2.5,2.5,6.5};
     public final int SIZE_CRITERES           = alternatives.length;
 
     public int getSize(){
@@ -221,11 +221,30 @@ public class Electre {
     }
 
     public double calcSumWeightCorcordance(int i , int j){
-        double concordance[][] = this.getConcordanceMatrix(i,j);
+        double currentCorcondance[][] = this.getConcordanceMatrix(i,j);
         double sum = 0;
 
+        for(int k=0;k<SIZE_CRITERES;k++){
+            sum+=currentCorcondance[k][3]*ALL_WEIGHTS[k];
+        }
         return sum;
         
+    }
+
+    //ensemble 
+
+    public List<Integer> getDiscordanceEnsemble(int i , int j , double m1[][]){
+        List<Integer> res = new ArrayList<Integer>();
+        //double currentCorcondance[][] = this.getConcordanceMatrix(i,j);
+        double currentDiscordance[][] = this.getDiscordanceMatricx(i+1,j+1);
+
+        for(int k=0 ; k< SIZE_CRITERES; k++){
+            if( currentDiscordance[k][3] >  m1[i][j])
+                res.add(k);
+        }
+
+        return res;
+
     }
 
     //calcul credibility Matrix
@@ -238,22 +257,58 @@ public class Electre {
                 if( i == j)
                     continue;
                 else{
-                    m1[i][j] = 1 ;
+                    m1[i][j] = (1/sumWeight()) * (calcSumWeightCorcordance(i+1,j+1));
                 }
             }
         }
+
+        allTable.add(m1);
 
 
 
         //second one : 1 - d(a,b)
         double m2[][] = new double[SIZE-1][SIZE-1];
+        for(int i=0 ; i< SIZE-1 ; i++){
+            for(int j=0 ; j< SIZE-1 ; j++){
+                if( i == j)
+                    continue;
+                else{
+                    List<Integer> discordanceEnsemble = this.getDiscordanceEnsemble(i,j,m1);
+                    if( discordanceEnsemble.size() == 0 )
+                        m2[i][j] = 0;
+                    else{
+                        double current = 1;
+                        double mul = 1;
+                        for(int p : discordanceEnsemble){
+                            double discordance[][] = this.getDiscordanceMatricx(i+1,j+1);
+                            mul*= (1 - discordance[p][3]) / (1 - m1[i][j]); 
+                        }
+                        current-=mul;
+                        m2[i][j] = current;
+                    }
+                }
+            }
+        }
+
+        allTable.add(m2);
+
 
 
 
         //third one  : Rs(a,b)
         double m3[][] = new double[SIZE-1][SIZE-1];
 
+        for(int i=0 ; i< SIZE -1 ;i++){
+            for(int j=0; j< SIZE -1 ; j++){
+                if(i == j)
+                    continue;
+                else{
+                    m3[i][j] = (1 - m2[i][j])*m1[i][j];
+                }
+            }
+        }
 
+        allTable.add(m3);
 
 
 
@@ -309,7 +364,7 @@ public class Electre {
         int SIZE_CRITERES = electre.getSizeCritere();
 
         //generate all excel files
-        for(int i=1;i<=7;i++){
+        /*for(int i=1;i<=7;i++){
             for(int j=1;j<=7;j++){
                 if( i != j){
                     table = electre.getConcordanceMatrix(i,j);
@@ -321,7 +376,7 @@ public class Electre {
 
                 }
             }
-        }
+        }*/
 
     }
     
