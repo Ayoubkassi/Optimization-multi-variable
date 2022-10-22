@@ -315,6 +315,16 @@ public class Electre {
         return allTable;
     }
 
+    //writing distillation algorithm
+
+    public int[] getOrder(){
+        int[] order = new int[SIZE-1];
+
+        
+        return order;
+
+    }
+
     
 
 
@@ -362,6 +372,17 @@ public class Electre {
         //System.out.println(electre.getSize());
         int SIZE = electre.getSize();
         int SIZE_CRITERES = electre.getSizeCritere();
+
+
+        //Test credibility
+        /*List<double[][]> res = electre.getCredibilityMatrix();
+        double[][] credebility = res.get(2);
+        for(double[] row : credebility){
+            for(double val : row){
+                System.out.print(val+"      ");
+            }
+            System.out.println();
+        }*/
 
         //generate all excel files
         /*for(int i=1;i<=7;i++){
