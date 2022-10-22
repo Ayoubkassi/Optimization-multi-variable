@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
+import java.util.List;
 /**
  *
  * @author ryota
@@ -54,12 +56,21 @@ public class Electre {
    };
     
     
-    public final int SIZE = alternatives[0].length;
+    public final int SIZE                    = alternatives[0].length;
     public final double SEUIL_PREFERENCE[]   = new double[]{30,50,2,0,50,1,3,3,2,2,0.01,40,3,5,60,1,2,2,4,1,24,40,40,40,40,40,40,20,20,10};
     public final double SEUIL_INDIFFIRENCE[] = new double[]{10,20,1,0,20,0,1,0,0,1,0.00167,0,1,1.5,15,0,1,1,1,0,6,40,10,40,40,40,40,20,20,10};
     public final double SEUIL_VETO[]         = new double[]{101,140,7,7,1100,3,5,5,5,3,1,70,7,20,3000,5,4,4,5,7,70,101,101,101,101,101,101,101,101,101};
     public final int NATURE_SEUIL[]          = new int[]{2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
-    
+    public final static double WEIGHTS[]     = new double[]{2.2,6.7,24.4,17.8,22.2,26.7};
+    public final int SIZE_CRITERES           = alternatives.length;
+
+    public int getSize(){
+        return SIZE;
+    }
+
+    public int getSizeCritere(){
+        return SIZE_CRITERES;
+    }
     
     
     
@@ -166,8 +177,8 @@ public class Electre {
     
     //calcul matrice concordance
     public double[][] getConcordanceMatrix(int pos1, int pos2){
-        double result[][] = new double[SIZE][4];
-        for(int i=0;i<SIZE;i++){
+        double result[][] = new double[SIZE_CRITERES][4];
+        for(int i=0;i<SIZE_CRITERES;i++){
             for(int j=0;j<4;j++){
                 if(j == 0)
                     result[i][j] = alternatives[i][pos1] - alternatives[i][pos2];
@@ -184,8 +195,8 @@ public class Electre {
     
     //calcul matrice discordance
     public double[][] getDiscordanceMatricx(int pos1 , int pos2){
-        double result[][] = new double[SIZE][4];
-        for(int i=0;i<SIZE;i++){
+        double result[][] = new double[SIZE_CRITERES][4];
+        for(int i=0;i<SIZE_CRITERES;i++){
             for(int j=0;j<4;j++){
                 if(j == 0)
                     result[i][j] = alternatives[i][pos1] - alternatives[i][pos2];
@@ -199,6 +210,48 @@ public class Electre {
         }
         return result;
     }
+
+    public static double sumWeight(){
+        double sum =0;
+        for(double val : WEIGHTS){
+            sum+=val;
+        }
+        return sum;
+    }
+
+    //calcul credibility Matrix
+    public ArrayList<double[][]> getCredibilityMatrix(){
+        ArrayList<double[][]> allTable = new ArrayList<double[][]>();
+        //first one  : c(a,b)
+        double m1[][] = new double[SIZE-1][SIZE-1];
+        for(int i=0 ; i< SIZE-1 ; i++){
+            for(int j=0 ; j< SIZE-1 ; j++){
+                if( i == j)
+                    continue;
+                else{
+                    m1[i][j] = 1;
+                }
+            }
+        }
+
+
+
+        //second one : 1 - d(a,b)
+        double m2[][] = new double[SIZE-1][SIZE-1];
+
+
+
+        //third one  : Rs(a,b)
+        double m3[][] = new double[SIZE-1][SIZE-1];
+
+
+
+
+
+        return allTable;
+    }
+
+    
 
 
     public static void writeIntoCSV(double[][] table, String fileName) throws FileNotFoundException {
@@ -242,7 +295,11 @@ public class Electre {
         //loop over all tries
 
         double table[][];
+        //System.out.println(electre.getSize());
+        int SIZE = electre.getSize();
+        int SIZE_CRITERES = electre.getSizeCritere();
 
+        //generate all excel files
         for(int i=0;i<7;i++){
             for(int j=0;j<7;j++){
                 if( i != j){
