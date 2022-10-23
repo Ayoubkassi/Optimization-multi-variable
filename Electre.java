@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 /**
  *
  * @author ryota
@@ -324,11 +326,11 @@ public class Electre {
         int[][] additionalInfo = new int[SIZE -1][3];
 
 
-        List<Integer> allIndexes = new ArrayList<Integer>();
+        Set<Integer> allIndexes = new HashSet<Integer>();
         int loopIndex = 0;
 
         //start a loop
-        while( allIndexes.size() <= SIZE -1 ){
+        while( allIndexes.size() != SIZE -1 ){
 
 
 
@@ -363,7 +365,7 @@ public class Electre {
             double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
 
             //find lamda
-            double lamda = 0;
+            double lamda = -9999;
             for(double[] row : m3){
                 for(double val : row){
                     if((val != Double.NaN && val > lamda) && val < (lamdaMax - SLamdaMax ) )
@@ -407,7 +409,7 @@ public class Electre {
 
             //get the max 
             List<Integer> sameOrder = new ArrayList<Integer>();
-            int maxOver = -10000;
+            int maxOver = -9999;
             int bigIndex = 0;
             for(int i=0 ; i < SIZE -1 ; i++){
                 additionalInfo[i][2] = additionalInfo[i][0] - additionalInfo[i][1];
@@ -417,18 +419,23 @@ public class Electre {
                 }
             }
 
-
-            sameOrder.add(bigIndex);
+            if(allIndexes.contains(bigIndex) == false){
+                sameOrder.add(bigIndex);
+            }
             allIndexes.add(bigIndex);
+
 
             //check for other values exist with same rank
             for(int i=0 ; i< SIZE -1 ; i++){
                 if(additionalInfo[i][2] == maxOver && (i != bigIndex)){
-                        
+                    if(allIndexes.contains(i) == false){
                         sameOrder.add(i);
                         allIndexes.add(i);
+                    }
                 }
             }
+
+            System.out.println(allIndexes);
 
             
 
