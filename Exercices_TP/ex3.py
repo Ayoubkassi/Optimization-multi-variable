@@ -17,10 +17,10 @@ def objectif_func(x):
 	return sum 
 
 def constraint_1(x):
-	return np.sum(x) -4 
+	return np.sum(x) - 4 
 
 def constraint_2(x):
-	return  x[0] + x[3] + 1
+	return  -x[0] - x[3] + 1
 
 def constraint_3(x):
 	return x[3] - x[4]
@@ -33,19 +33,22 @@ def constraint_5(x):
 
 
 
+
+
+x0 = np.ones(n)
+bnds = optimize.Bounds(0, 1)
+integrality = np.full_like(x0, True) 
+
 constraint1 = { 'type' :'eq'     , 'fun' : constraint_1 }
 constraint2 = { 'type' : 'ineq'  , 'fun' : constraint_2 }
 constraint3 = { 'type' : 'ineq'  , 'fun' : constraint_3 }
 constraint4 = { 'type' : 'ineq'  , 'fun' : constraint_4 }
 constraint5 = { 'type' : 'eq'    , 'fun' : constraint_5 }
-
-
-bnds = optimize.Bounds(0, 1)
 cons = [constraint1,constraint2,constraint3,constraint4,constraint5]
 
-x0 = np.ones(n)
 
 
-result = minimize(objectif_func,x0,method='SLSQP',bounds=bnds, constraints=cons)
+
+result = minimize(objectif_func,x0,method='SLSQP',bounds=bnds, constraints=cons,options={'ftol':1e-00})
 
 print(result)
