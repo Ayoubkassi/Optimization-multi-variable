@@ -39,16 +39,17 @@ def getArr(k):
 sizes0 = getArr(0)
 sizes3 = getArr(3)
 sizes5 = getArr(5)
+sizes0_5 = np.add(sizes0,sizes5)
 
-A = np.array([sizes,sizes0,sizes3,sizes3,sizes0,sizes5])
-lb= np.array([4,0,sizes[4],1-sizes[1]-sizes[4],0,0])
-ub= np.array([4,1-sizes[3],1,1,1-sizes[5],1-sizes[0]])
+A = np.array([sizes,sizes0,sizes3,sizes3,sizes0_5])
+lb= np.array([4,0,sizes[4],1-sizes[1]-sizes[4],1])
+ub= np.array([4,1-sizes[3],1,1,1])
 
 cons = optimize.LinearConstraint(A,lb,ub)
 
 
 from scipy.optimize import milp
-res = milp(c=values, constraints=cons,integrality=integrality, bounds=bounds)
+res = milp(c=-values, constraints=cons,integrality=integrality, bounds=bounds)
 res.success
 res.x
 
