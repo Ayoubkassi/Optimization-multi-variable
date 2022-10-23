@@ -4,6 +4,7 @@ import numpy as np
 import scipy as sp
 from scipy import optimize
 from scipy.optimize import milp
+from scipy.optimize import minimize
 
 # Construction d'usines
 
@@ -45,13 +46,32 @@ def objectif_func(x):
 	return sum
 
 
+#constraints
+#initialisation
+def constraints_1(x):
+	sum = 0
+	for i in range(N):
+		for j in range(A):
+			sum+=x[i][j]
+	return sum - 4
 
-def constraint_1(x):
-	for j in range(A):
-		x[1][j] <= x[3][j] 
-		x[3][j] <= x[1][j]
+constraint1 = { 'type' : 'eq' , 'fun' : constraints_1 }	
+cons = [constraint1]
+
+
+bnds = optimize.Bounds(0, 1)
+
+x0 = [
+	[1,1,1,1],
+	[1,1,1,1],
+	[1,1,1,1],
+	[1,1,1,1],
+	[1,1,1,1],
+	[1,1,1,1]
+]
 
 
 
 
+result = minimize(objectif_func,x0,method='SLSQP',bounds=bnds, constraints=cons)
 
