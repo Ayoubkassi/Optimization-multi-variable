@@ -28,9 +28,6 @@ for i in range(len(data)):
 			current.append(0)
 	convertedData.append(current)
 
-#print for test
-for row in convertedData:
-	print(row)
 
 sizes = np.array(convertedData)
 values = np.array([1,1,1,1,1,1])
@@ -94,11 +91,5 @@ print(res)
 
 
 
-# n = len(data)
-
-# def objectif_func(x):
-# 	return np.sum(x)
-
-# bnds = optimize.Bounds(0, 1)
 
 
