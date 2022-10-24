@@ -75,3 +75,5 @@ x0 = [
 
 result = minimize(objectif_func,x0,method='SLSQP',bounds=bnds, constraints=cons)
 
+print(result)
+
