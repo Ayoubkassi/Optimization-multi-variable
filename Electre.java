@@ -664,7 +664,14 @@ public class Electre {
         System.out.println(res);
 
 
+
+
         System.out.println("Final Order : 3 -> 0,1,2,6 -> 4,5 ");
+
+        /*Desc : 
+        {0=[4, 5], 1=[0, 1, 2, 3, 6]}
+        Asc : 
+        {0=[3], 1=[0, 1, 2, 4, 5, 6]}*/
 
 
 
