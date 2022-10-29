@@ -97,7 +97,7 @@ public class Electre {
     public final int SIZE = NATURE_SEUIL.length;*/
     
     //print table
-    public void printTable(double alternatives[][]){
+    public static void printTable(double alternatives[][]){
         for(double[] rowAlternatives : alternatives ){
             for(double value : rowAlternatives){
                 System.out.print(value +" ");
@@ -607,6 +607,19 @@ public class Electre {
         out.close();
 
     }
+
+    public static void writeIntoCSVList(ArrayList<double[][]> table) throws FileNotFoundException {
+
+        int rep = 1;
+        for(double[][] matrix: table){
+            String name = "matrix" + rep;
+            writeIntoCSV(matrix,name);
+            rep++;
+        }
+
+        
+
+    }
     
     
     public static void main(String[] args) throws FileNotFoundException{
@@ -634,9 +647,17 @@ public class Electre {
         int SIZE_CRITERES = electre.getSizeCritere();
 
 
+        //print 
+
+        ArrayList<double[][]> credibilityMatrix = electre.getCredibilityMatrix();
+        writeIntoCSVList(credibilityMatrix);
+
+
         System.out.println("Desc : ");
         Map <Integer , List<Integer>> res = electre.getOrderDesc();
         System.out.println(res);
+
+
 
         System.out.println("Asc : ");
         res = electre.getOrderAsc();
