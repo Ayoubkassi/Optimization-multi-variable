@@ -66,7 +66,7 @@ public class Electre {
     public final double SEUIL_VETO[]         = new double[]{101,140,7,7,1100,3,5,5,5,3,1,70,7,20,3000,5,4,4,5,7,70,101,101,101,101,101,101,101,101,101};
     public final int NATURE_SEUIL[]          = new int[]{2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2};
     public final static double WEIGHTS[]     = new double[]{2.2,6.7,24.4,17.8,22.2,26.7};
-    public final static double ALL_WEIGHTS[] = new double[]{7.5,7.5,3,1,5,7.5,1,3,7.5,5,7,1,3,7,5,1,1,5,7,3,1,6.5,13,2.5,11,2.5,9,2.5,2.5,6.5};
+    public final static double ALL_WEIGHTS[] = new double[]{833.344,833.344,333.338,111.121,555.554,763.875,101.858,305.55,763.875,694.438,972.213,138.888,416.663,291.681,208.344,41.669,152.775,763.875,1069.425,458.325,222.222,206.349,430.476,79.361,349.213,79.361,285.71,79.361,79.361,206.349};
     public final int SIZE_CRITERES           = alternatives.length;
 
     public int getSize(){
@@ -218,7 +218,7 @@ public class Electre {
 
     public static double sumWeight(){
         double sum =0;
-        for(double val : WEIGHTS){
+        for(double val : ALL_WEIGHTS){
             sum+=val;
         }
         return sum;
@@ -321,7 +321,7 @@ public class Electre {
 
     //writing distillation algorithm
 
-    public Map<Integer, List<Integer>> getOrder(){
+    public Map<Integer, List<Integer>> getOrderDesc(){
         Map<Integer , List<Integer>> order = new HashMap<Integer, List<Integer>>();
         int[][] additionalInfo = new int[SIZE -1][3];
 
@@ -334,7 +334,7 @@ public class Electre {
 
 
 
-            System.out.println("heeere");
+            //System.out.println("heeere");
             //determine lamda Max
             double lamdaMax = 0;
             double[][] m3 = this.getCredibilityMatrix().get(2);
@@ -347,12 +347,12 @@ public class Electre {
             }
 
             //print matrix test
-            for(double[] row : m3){
+            /*for(double[] row : m3){
                 for(double val : row){
                     System.out.print(val+"      ");
                 }
                 System.out.println();
-            }
+            }*/
 
             for(double[] row : m3){
                 for(double val : row){
@@ -435,7 +435,142 @@ public class Electre {
                 }
             }
 
-            System.out.println(allIndexes);
+            //PRINT EVERY MATRIX
+            //System.out.println(allIndexes);
+
+            
+
+            //here when we will see difference between asecnd and descend
+
+
+            //System.out.println(allIndexes.size());
+            order.put(loopIndex++, sameOrder);
+        }
+
+        return order;
+
+    }
+
+
+
+    //
+
+     public Map<Integer, List<Integer>> getOrderAsc(){
+        Map<Integer , List<Integer>> order = new HashMap<Integer, List<Integer>>();
+        int[][] additionalInfo = new int[SIZE -1][3];
+
+
+        Set<Integer> allIndexes = new HashSet<Integer>();
+        int loopIndex = 0;
+
+        //start a loop
+        while( allIndexes.size() != SIZE -1 ){
+
+
+
+            //System.out.println("heeere");
+            //determine lamda Max
+            double lamdaMax = 0;
+            double[][] m3 = this.getCredibilityMatrix().get(2);
+            //update values as null
+            for(int val : allIndexes){
+                for(int i=0 ; i< SIZE -1 ; i++){
+                    m3[i][val] = Double.NaN;
+                    m3[val][i] = Double.NaN;
+                }   
+            }
+
+            //print matrix test
+            /*for(double[] row : m3){
+                for(double val : row){
+                    System.out.print(val+"      ");
+                }
+                System.out.println();
+            }*/
+
+            for(double[] row : m3){
+                for(double val : row){
+                    if( val > lamdaMax && val != Double.NaN)
+                        lamdaMax = val;
+                }
+            }
+
+            //determine s(lamdaMax) 
+            double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
+
+            //find lamda
+            double lamda = -9999;
+            for(double[] row : m3){
+                for(double val : row){
+                    if((val != Double.NaN && val > lamda) && val < (lamdaMax - SLamdaMax ) )
+                        lamda = val;
+                }
+            }
+
+            //update the existing m3
+            for(int i=0 ; i< SIZE -1 ; i++){
+                for(int j=0 ; j<SIZE -1 ; j++){
+                    if(m3[i][j] > lamda)
+                        m3[i][j] = 1;
+                    else if(m3[i][j] != Double.NaN) 
+                        m3[i][j] = 0;
+                }
+            }
+
+            //add additionalInfo : os et od et q 
+            int currentSum ;
+            for(int i = 0; i< SIZE -1 ; i++){
+                currentSum = 0;
+                for(int j=0 ; j< SIZE -1 ; j++){
+                    if(i != j && m3[i][j] != Double.NaN)
+                        currentSum+=m3[i][j];
+                    else 
+                        continue;
+                }
+                additionalInfo[i][0] = currentSum;
+            }
+
+            for(int i = 0; i< SIZE -1 ; i++){
+                currentSum = 0;
+                for(int j=0 ; j< SIZE -1 ; j++){
+                    if(i != j && m3[i][j] != Double.NaN)
+                        currentSum+=m3[j][i];
+                    else 
+                        continue;
+                }
+                additionalInfo[i][1] = currentSum;
+            }
+
+            //get the min 
+            List<Integer> sameOrder = new ArrayList<Integer>();
+            int minOver = 9999;
+            int smallIndex = 0;
+            for(int i=0 ; i < SIZE -1 ; i++){
+                additionalInfo[i][2] = additionalInfo[i][0] - additionalInfo[i][1];
+                if(additionalInfo[i][2] < minOver){
+                    minOver = additionalInfo[i][2];
+                    smallIndex = i;
+                }
+            }
+
+            if(allIndexes.contains(smallIndex) == false){
+                sameOrder.add(smallIndex);
+            }
+            allIndexes.add(smallIndex);
+
+
+            //check for other values exist with same rank
+            for(int i=0 ; i< SIZE -1 ; i++){
+                if(additionalInfo[i][2] == minOver && (i != smallIndex)){
+                    if(allIndexes.contains(i) == false){
+                        sameOrder.add(i);
+                        allIndexes.add(i);
+                    }
+                }
+            }
+
+            //PRINT EVERY MATRIX
+            //System.out.println(allIndexes);
 
             
 
@@ -498,8 +633,18 @@ public class Electre {
         int SIZE = electre.getSize();
         int SIZE_CRITERES = electre.getSizeCritere();
 
-        Map <Integer , List<Integer>> res = electre.getOrder();
+
+        System.out.println("Desc : ");
+        Map <Integer , List<Integer>> res = electre.getOrderDesc();
         System.out.println(res);
+
+        System.out.println("Asc : ");
+        res = electre.getOrderAsc();
+        System.out.println(res);
+
+
+        System.out.println("Final Order : 3 -> 0,1,2,6 -> 4,5 ");
+
 
 
         //Test credibility
