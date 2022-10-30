@@ -347,12 +347,15 @@ public class Electre {
             }
 
             //print matrix test
-            /*for(double[] row : m3){
+            System.out.println("*************************************");
+            for(double[] row : m3){
                 for(double val : row){
                     System.out.print(val+"      ");
                 }
                 System.out.println();
-            }*/
+            }
+
+            System.out.println("*************************************");
 
             for(double[] row : m3){
                 for(double val : row){
@@ -481,12 +484,14 @@ public class Electre {
             }
 
             //print matrix test
-            /*for(double[] row : m3){
+            System.out.println("*************************************");
+            for(double[] row : m3){
                 for(double val : row){
                     System.out.print(val+"      ");
                 }
                 System.out.println();
-            }*/
+            }
+            System.out.println("*************************************");
 
             for(double[] row : m3){
                 for(double val : row){
@@ -570,7 +575,7 @@ public class Electre {
             }
 
             //PRINT EVERY MATRIX
-            //System.out.println(allIndexes);
+            System.out.println(allIndexes);
 
             
 
@@ -649,8 +654,8 @@ public class Electre {
 
         //print 
 
-        ArrayList<double[][]> credibilityMatrix = electre.getCredibilityMatrix();
-        writeIntoCSVList(credibilityMatrix);
+        /*ArrayList<double[][]> credibilityMatrix = electre.getCredibilityMatrix();
+        writeIntoCSVList(credibilityMatrix);*/
 
 
         System.out.println("Desc : ");
@@ -666,7 +671,7 @@ public class Electre {
 
 
 
-        System.out.println("Final Order : 3 -> 0,1,2,6 -> 4,5 ");
+        //System.out.println("Final Order : 3 -> 0,1,2,6 -> 4,5 ");
 
         /*Desc : 
         {0=[4, 5], 1=[0, 1, 2, 3, 6]}
