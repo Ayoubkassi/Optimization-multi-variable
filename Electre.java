@@ -105,6 +105,16 @@ public class Electre {
             System.out.println("");
         }
     }
+
+    //print int table
+    public static void printTable1(int alternatives[][]){
+        for(int[] rowAlternatives : alternatives ){
+            for(int value : rowAlternatives){
+                System.out.print(value +" ");
+            }
+            System.out.println("");
+        }
+    }
     
     //Transform all table into ones values -> max problem
     public void ConvertAllIntoMax(){
@@ -364,8 +374,13 @@ public class Electre {
                 }
             }
 
+            System.out.println("lamdaMax : "+lamdaMax);
+
             //determine s(lamdaMax) 
             double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
+
+            System.out.println("SLamdaMax : " + SLamdaMax);
+
 
             //find lamda
             double lamda = -9999;
@@ -375,6 +390,9 @@ public class Electre {
                         lamda = val;
                 }
             }
+
+            System.out.println("lamda : "+lamda);
+
 
             //update the existing m3
             for(int i=0 ; i< SIZE -1 ; i++){
@@ -410,6 +428,8 @@ public class Electre {
                 additionalInfo[i][1] = currentSum;
             }
 
+            
+
             //get the max 
             List<Integer> sameOrder = new ArrayList<Integer>();
             int maxOver = -9999;
@@ -421,6 +441,9 @@ public class Electre {
                     bigIndex = i;
                 }
             }
+
+            System.out.println("additionalInfo In desc Itteration : "+loopIndex);
+            printTable1(additionalInfo);
 
             if(allIndexes.contains(bigIndex) == false){
                 sameOrder.add(bigIndex);
@@ -500,8 +523,12 @@ public class Electre {
                 }
             }
 
+            System.out.println("lamdaMax : "+lamdaMax);
+
             //determine s(lamdaMax) 
             double SLamdaMax = 0.3 - ( 0.15 * lamdaMax );
+
+            System.out.println("SlamdaMax : "+SLamdaMax);
 
             //find lamda
             double lamda = -9999;
@@ -511,6 +538,8 @@ public class Electre {
                         lamda = val;
                 }
             }
+
+            System.out.println("lamda : "+lamda);
 
             //update the existing m3
             for(int i=0 ; i< SIZE -1 ; i++){
@@ -546,6 +575,8 @@ public class Electre {
                 additionalInfo[i][1] = currentSum;
             }
 
+            
+
             //get the min 
             List<Integer> sameOrder = new ArrayList<Integer>();
             int minOver = 9999;
@@ -557,6 +588,9 @@ public class Electre {
                     smallIndex = i;
                 }
             }
+
+            System.out.println("additionalInfo In Asc Itteration : "+loopIndex);
+            printTable1(additionalInfo);
 
             if(allIndexes.contains(smallIndex) == false){
                 sameOrder.add(smallIndex);
